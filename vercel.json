@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "functions": {
+    "functions/proxy.js": {
+      "runtime": "edge"
+    }
+  },
+  "routes": [
+    {
+      "src": "/(gh|wp|npm)/.*",
+      "dest": "/functions/proxy.js"
+    }
+  ]
+}
