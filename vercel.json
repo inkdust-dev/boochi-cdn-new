@@ -2,7 +2,7 @@
   "version": 2,
   "functions": {
     "api/proxy.js": {
-      "runtime": "nodejs16.x"
+      "runtime": "@vercel/edge@4.0.1"
     }
   },
   "routes": [
