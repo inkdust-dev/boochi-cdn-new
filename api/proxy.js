@@ -1,7 +1,8 @@
 const fs = require('fs');
 const { parse } = require('url');
 
-const whitelist = JSON.parse(fs.readFileSync('./whitelist.json', 'utf8')).whitelist;
+const path = require('path');
+const whitelist = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'whitelist.json'), 'utf8')).whitelist;
 
 module.exports = (req, res) => {
   const { query, pathname } = parse(req.url, true);
