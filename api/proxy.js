@@ -1,3 +1,5 @@
+import fetch from 'node-fetch';
+
 export async function handler(req) {
   try {
     const { pathname, search } = new URL(req.url);
