@@ -1,0 +1,7 @@
+{
+  "whitelist": [
+    "/gh/jquery/jquery",
+    "/wp/wordpress/wordpress",
+    "/npm/react"
+  ]
+}
