@@ -1,38 +1,19 @@
-import fetch from 'node-fetch';
+const fs = require('fs');
+const { parse } = require('url');
 
-export async function handler(req) {
-  try {
-    const { pathname, search } = new URL(req.url);
-    const cdnBaseUrl = "https://cdn.jsdelivr.net";
+const whitelist = JSON.parse(fs.readFileSync('./whitelist.json', 'utf8')).whitelist;
 
-    const allowedPaths = [
-      "/gh/jquery/jquery", 
-      "/gh/twbs/bootstrap", 
-      "/wp/wordpress/wordpress",  
-      "/npm/react",
-    ];
+module.exports = (req, res) => {
+  const { query, pathname } = parse(req.url, true);
+  const requestPath = pathname.substring(1); // 移除开头的斜杠
 
-    const isAllowed = allowedPaths.some((path) => pathname.startsWith(path));
-
-    if (!isAllowed) {
-      return new Response("Unauthorized", { status: 403 });
-    }
-
-    const proxyUrl = `${cdnBaseUrl}${pathname}${search}`;
-    const response = await fetch(proxyUrl, {
-      headers: req.headers,
+  // 检查请求路径是否在白名单中
+  if (whitelist.includes(`allowed-path/${requestPath}`)) {
+    res.writeHead(302, {
+      Location: `https://cdn.jsdelivr.net/allowed-path/${requestPath}`
     });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch ${proxyUrl}: ${response.statusText}`);
-    }
-
-    const responseBody = await response.text();
-    return new Response(responseBody, {
-      status: response.status,
-      headers: response.headers,
-    });
-  } catch (error) {
-    return new Response(`Error: ${error.message}`, { status: 500 });
+    res.end();
+  } else {
+    res.status(403).send('Forbidden: This path is not allowed.');
   }
-}
+};
